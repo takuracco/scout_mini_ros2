@@ -2,6 +2,8 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration, Command
 from launch_ros.actions import Node
+from launch.substitutions import PathJoinSubstitution
+from launch_ros.substitutions import FindPackageShare
 from ament_index_python.packages import get_package_share_directory
 import os
 
@@ -9,6 +11,12 @@ def generate_launch_description():
     pkg = get_package_share_directory('scout_mini_description')
     default_model = os.path.join(pkg, 'urdf', 'scout_mini.urdf.xacro')
     default_rviz  = os.path.join(pkg, 'rviz', 'scout_mini.rviz')
+
+    control_yaml = PathJoinSubstitution([
+        FindPackageShare("scout_mini_control"),
+        "config",
+        "scout_mini_control.yaml",
+    ])
 
     model = LaunchConfiguration('model')
     rviz_config = LaunchConfiguration('rvizconfig')
@@ -23,7 +31,7 @@ def generate_launch_description():
             package='robot_state_publisher',
             executable='robot_state_publisher',
             parameters=[{
-                'robot_description': Command(['xacro ', model]),
+                'robot_description': Command(['xacro ', model, ' ros2_control_yaml:=', control_yaml]),
                 'use_sim_time': use_sim_time,
             }],
             output='screen',

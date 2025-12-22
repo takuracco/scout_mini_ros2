@@ -13,13 +13,11 @@ def generate_launch_description():
     set_model_path = SetEnvironmentVariable(
         name='GAZEBO_MODEL_PATH',
         value=[
-            # world用: scout_mini_gazebo_sim/models
             PathJoinSubstitution([sim_share, 'models']),
             ':',
-            # robot用: scout_mini_description の「1個上」= .../share
             PathJoinSubstitution([desc_share, '..']),
             ':',
-            EnvironmentVariable('GAZEBO_MODEL_PATH')
+            '/usr/share/gazebo-11/models',
         ]
     )
 
@@ -32,6 +30,12 @@ def generate_launch_description():
         }.items()
     )
 
+    control_yaml = PathJoinSubstitution([
+        FindPackageShare("scout_mini_control"),
+        "config",
+        "scout_mini_control.yaml",
+    ])
+
     robot_description = {
         "robot_description": Command([
             "xacro ",
@@ -40,22 +44,25 @@ def generate_launch_description():
                 "urdf",
                 "scout_mini.urdf.xacro",
             ]),
+            " ros2_control_yaml:=",
+            control_yaml,
         ])
     }
 
-    control_node = Node(
-        package="controller_manager",
-        executable="ros2_control_node",
-        parameters=[
-            robot_description,
-            PathJoinSubstitution([
-                FindPackageShare("scout_mini_control"),
-                "config",
-                "controllers.yaml",
-            ]),
-        ],
-        output="screen"
-    )
+
+    # control_node = Node(
+    #     package="controller_manager",
+    #     executable="ros2_control_node",
+    #     parameters=[
+    #         robot_description,
+    #         PathJoinSubstitution([
+    #             FindPackageShare("scout_mini_control"),
+    #             "config",
+    #             "scout_mini_control.yaml",
+    #         ]),
+    #     ],
+    #     output="screen"
+    # )
 
     rviz = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -69,10 +76,24 @@ def generate_launch_description():
         )
     )
 
+    joint_state_broadcaster_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
+    )
+
+    diff_drive_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["diff_drive_controller", "--controller-manager", "/controller_manager"],
+    )
+
     return LaunchDescription([
         set_model_path,
         gazebo,
         spawn_robot,
-        control_node,
+        # control_node,
+        joint_state_broadcaster_spawner,
+        diff_drive_spawner,
         rviz,
     ])

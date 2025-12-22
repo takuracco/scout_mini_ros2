@@ -13,10 +13,10 @@ ROS2 Humble
 
 # コマンド
 rviz表示
-'ros2 launch scout_mini_description display.launch.py'
+`ros2 launch scout_mini_description display.launch.py`
 
 gazeboスポーン
-'ros2 launch scout_mini_description spawn.launch.py'
+`ros2 launch scout_mini_description spawn.launch.py`
 
 すべて起動
-'ros2 launch scout_mini_gazebo_sim sim.launch.py'
+`ros2 launch scout_mini_gazebo_sim sim.launch.py`

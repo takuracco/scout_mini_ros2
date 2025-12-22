@@ -1,0 +1,6 @@
+[31mCMake Error at cmake_install.cmake:46 (file):
+  file INSTALL cannot find
+  "/home/takuto/scout_ws/src/scout_mini_description/launch": No such file or
+  directory.
+
+[0m

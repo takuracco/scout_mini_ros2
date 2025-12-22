@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<robot name="scout_mini" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find scout_mini_description)/urdf/scout_mini_base.xacro"/>
+  <xacro:include filename="$(find scout_mini_description)/urdf/scout_mini_lidar.xacro"/>
+  <xacro:include filename="$(find scout_mini_description)/urdf/scout_mini_gazebo.xacro"/>
+
+  <xacro:scout_mini_base/>
+  <xacro:scout_mini_lidar parent="base_link"/>
+  <xacro:scout_mini_gazebo/>
+
+  <gazebo>
+    <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+      <ros>
+        <namespace>/</namespace>
+      </ros>
+    </plugin>
+  </gazebo>
+
+  <ros2_control name="GazeboSystem" type="system">
+    <hardware>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </hardware>
+
+    <joint name="front_left_wheel">
+      <command_interface name="velocity"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="front_right_wheel">
+      <command_interface name="velocity"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="rear_left_wheel">
+      <command_interface name="velocity"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="rear_right_wheel">
+      <command_interface name="velocity"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+  </ros2_control>
+
+
+</robot>

@@ -1,16 +1,30 @@
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, SetEnvironmentVariable
-from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import PathJoinSubstitution, EnvironmentVariable, Command
+from launch.actions import DeclareLaunchArgument, SetEnvironmentVariable, TimerAction, ExecuteProcess
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, Command
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
-    sim_share = FindPackageShare('scout_mini_gazebo_sim')
+    use_sim_time = LaunchConfiguration('use_sim_time')
+
+    sim_share  = FindPackageShare('scout_mini_gazebo_sim')
     desc_share = FindPackageShare('scout_mini_description')
 
-    # worldモデル(testworld) と robotモデル(scout_mini_description) の両方を通す
-    set_model_path = SetEnvironmentVariable(
+    world_file = PathJoinSubstitution([sim_share, 'worlds', 'testworld.world'])
+
+    control_yaml = PathJoinSubstitution([
+        FindPackageShare('scout_mini_control'),
+        'config',
+        'scout_mini_control.yaml',
+    ])
+
+    xacro_file = PathJoinSubstitution([desc_share, 'urdf', 'scout_mini.urdf.xacro'])
+    robot_description = Command([
+        'xacro ', xacro_file,
+        ' ros2_control_yaml:=', control_yaml
+    ])
+
+    set_gazebo_model_path = SetEnvironmentVariable(
         name='GAZEBO_MODEL_PATH',
         value=[
             PathJoinSubstitution([sim_share, 'models']),
@@ -21,79 +35,72 @@ def generate_launch_description():
         ]
     )
 
-    gazebo = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            PathJoinSubstitution([FindPackageShare('gazebo_ros'), 'launch', 'gazebo.launch.py'])
-        ),
-        launch_arguments={
-            'world': PathJoinSubstitution([sim_share, 'worlds', 'testworld.world']),
-        }.items()
+    # ★ここがポイント：gzserver/gzclientはExecuteProcessで起動する
+    gzserver = ExecuteProcess(
+        cmd=[
+            'gzserver',
+            world_file,
+            '-s', 'libgazebo_ros_init.so',
+            '-s', 'libgazebo_ros_factory.so',
+            '-s', 'libgazebo_ros_force_system.so',
+        ],
+        output='screen',
     )
 
-    control_yaml = PathJoinSubstitution([
-        FindPackageShare("scout_mini_control"),
-        "config",
-        "scout_mini_control.yaml",
-    ])
-
-    robot_description = {
-        "robot_description": Command([
-            "xacro ",
-            PathJoinSubstitution([
-                FindPackageShare("scout_mini_description"),
-                "urdf",
-                "scout_mini.urdf.xacro",
-            ]),
-            " ros2_control_yaml:=",
-            control_yaml,
-        ])
-    }
-
-
-    # control_node = Node(
-    #     package="controller_manager",
-    #     executable="ros2_control_node",
-    #     parameters=[
-    #         robot_description,
-    #         PathJoinSubstitution([
-    #             FindPackageShare("scout_mini_control"),
-    #             "config",
-    #             "scout_mini_control.yaml",
-    #         ]),
-    #     ],
-    #     output="screen"
-    # )
-
-    rviz = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            PathJoinSubstitution([desc_share, 'launch', 'display.launch.py'])
-        )
+    # GUIが落ちるなら一旦コメントアウトでOK
+    gzclient = ExecuteProcess(
+        cmd=['gzclient'],
+        output='screen',
     )
 
-    spawn_robot = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            PathJoinSubstitution([desc_share, 'launch', 'spawn.launch.py'])
-        )
+    rsp = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        parameters=[{
+            'robot_description': robot_description,
+            'use_sim_time': use_sim_time,
+        }],
+        output='screen',
     )
 
-    joint_state_broadcaster_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
+    spawn = Node(
+        package='gazebo_ros',
+        executable='spawn_entity.py',
+        arguments=['-entity', 'scout_mini', '-topic', '/robot_description', '-x', '0', '-y', '0', '-z', '0.2'],
+        output='screen',
     )
 
-    diff_drive_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["diff_drive_controller", "--controller-manager", "/controller_manager"],
+    jsb_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['joint_state_broadcaster', '--controller-manager', '/controller_manager'],
+        output='screen',
+    )
+    diff_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['diff_drive_controller', '--controller-manager', '/controller_manager'],
+        output='screen',
+    )
+
+    rviz_config = PathJoinSubstitution([desc_share, 'rviz', 'scout_mini.rviz'])
+    rviz = Node(
+        package='rviz2',
+        executable='rviz2',
+        arguments=['-d', rviz_config],
+        parameters=[{'use_sim_time': use_sim_time}],
+        output='screen',
     )
 
     return LaunchDescription([
-        set_model_path,
-        gazebo,
-        spawn_robot,
-        # control_node,
-        joint_state_broadcaster_spawner,
-        diff_drive_spawner,
+        DeclareLaunchArgument('use_sim_time', default_value='true'),
+        set_gazebo_model_path,
+
+        gzserver,
+        gzclient,  # GUI不要なら消す/コメントアウト
+
+        rsp,
+        TimerAction(period=2.0, actions=[spawn]),
+        TimerAction(period=6.0, actions=[jsb_spawner, diff_spawner]),
         rviz,
     ])

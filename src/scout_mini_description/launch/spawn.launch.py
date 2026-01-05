@@ -41,7 +41,18 @@ def generate_launch_description():
         output='screen'
     )
 
+    cmd_vel_relay = Node(
+        package="topic_tools",
+        executable="relay",
+        arguments=[
+            "/cmd_vel",
+            "/diff_drive_controller/cmd_vel_unstamped",
+        ],
+        output="screen",
+    )
+
     return LaunchDescription([
         rsp,
         TimerAction(period=2.0, actions=[spawn]),
+        cmd_vel_relay,
     ])

@@ -18,6 +18,19 @@
     </plugin>
   </gazebo>
 
+  <gazebo>
+    <plugin name="ground_truth_p3d" filename="libgazebo_ros_p3d.so">
+      <ros>
+        <namespace>/</namespace>
+        <remapping>odom:=/ground_truth/odom</remapping>
+      </ros>
+      <update_rate>50.0</update_rate>
+      <frame_name>world</frame_name>
+      <body_name>base_link</body_name>
+      <gaussian_noise>0.0</gaussian_noise>
+    </plugin>
+  </gazebo>
+
   <ros2_control name="GazeboSystem" type="system">
     <hardware>
       <plugin>gazebo_ros2_control/GazeboSystem</plugin>

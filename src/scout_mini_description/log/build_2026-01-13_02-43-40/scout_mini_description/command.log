@@ -1,0 +1,2 @@
+Invoking command in '/home/takuto/scout_mini_ros2/src/scout_mini_description/build/scout_mini_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/takuto/scout_mini_ros2/src/scout_mini_description/build/scout_mini_description -- -j16 -l16
+Invoked command in '/home/takuto/scout_mini_ros2/src/scout_mini_description/build/scout_mini_description' returned '2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/takuto/scout_mini_ros2/src/scout_mini_description/build/scout_mini_description -- -j16 -l16

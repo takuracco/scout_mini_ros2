@@ -4,9 +4,11 @@
   <xacro:include filename="$(find scout_mini_description)/urdf/scout_mini_base.xacro"/>
   <xacro:include filename="$(find scout_mini_description)/urdf/scout_mini_lidar.xacro"/>
   <xacro:include filename="$(find scout_mini_description)/urdf/scout_mini_gazebo.xacro"/>
+  <xacro:include filename="$(find scout_mini_description)/urdf/scout_mini_imu.xacro"/>
 
   <xacro:scout_mini_base/>
   <xacro:scout_mini_lidar parent="base_link"/>
+  <xacro:scout_mini_imu parent="base_link"/>
   <xacro:scout_mini_gazebo/>
 
 
@@ -24,7 +26,7 @@
         <namespace>/</namespace>
         <remapping>odom:=/ground_truth/odom</remapping>
       </ros>
-      <update_rate>50.0</update_rate>
+      <update_rate>100.0</update_rate>
       <frame_name>world</frame_name>
       <body_name>base_link</body_name>
       <gaussian_noise>0.0</gaussian_noise>

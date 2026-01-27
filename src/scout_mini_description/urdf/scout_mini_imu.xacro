@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:macro name="scout_mini_imu" params="parent:=base_link">
+
+    <!-- IMU link（見た目は不要ならvisual消してOK） -->
+    <link name="imu_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.02 0.02 0.01"/>
+        </geometry>
+        <material name="Gray"/>
+      </visual>
+    </link>
+
+    <!-- base_linkに固定 -->
+    <joint name="imu_joint" type="fixed">
+       <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="${parent}"/>
+        <child link="imu_link"/>
+        </joint> 
+
+    <!-- Gazebo IMU sensor -->
+    <gazebo reference="imu_link">
+      <sensor name="imu_sensor" type="imu">
+        <always_on>true</always_on>
+        <update_rate>100.0</update_rate>
+        <visualize>false</visualize>
+        <pose>0 0 0 0 0 0</pose>
+
+        <!-- ノイズは最初0でOK（後で現実寄せするなら入れる） -->
+        <imu>
+          <angular_velocity>
+            <x><noise type="gaussian"><mean>0</mean><stddev>0.0</stddev></noise></x>
+            <y><noise type="gaussian"><mean>0</mean><stddev>0.0</stddev></noise></y>
+            <z><noise type="gaussian"><mean>0</mean><stddev>0.0</stddev></noise></z>
+          </angular_velocity>
+          <linear_acceleration>
+            <x><noise type="gaussian"><mean>0</mean><stddev>0.0</stddev></noise></x>
+            <y><noise type="gaussian"><mean>0</mean><stddev>0.0</stddev></noise></y>
+            <z><noise type="gaussian"><mean>0</mean><stddev>0.0</stddev></noise></z>
+          </linear_acceleration>
+        </imu>
+
+        <!-- ROS2出力プラグイン（gazebo_ros_pkgs側） -->
+        <plugin name="gazebo_ros_imu" filename="libgazebo_ros_imu_sensor.so">
+          <ros>
+            <namespace>/</namespace>
+            <!-- ここで /imu に出す -->
+            <remapping>~/out:=/imu</remapping>
+          </ros>
+          <frame_name>imu_link</frame_name>
+        </plugin>
+
+      </sensor>
+    </gazebo>
+
+  </xacro:macro>
+</robot>

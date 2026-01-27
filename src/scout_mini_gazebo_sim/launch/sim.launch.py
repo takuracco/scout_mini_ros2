@@ -12,6 +12,8 @@ def generate_launch_description():
 
     world_file = PathJoinSubstitution([sim_share, 'worlds', 'testworld.world'])
 
+    slam_yaml = PathJoinSubstitution([sim_share, 'config', 'scout_mini_slam.yaml'])
+
     control_yaml = PathJoinSubstitution([
         FindPackageShare('scout_mini_control'),
         'config',
@@ -92,15 +94,17 @@ def generate_launch_description():
         output='screen',
     )
 
+
     return LaunchDescription([
         DeclareLaunchArgument('use_sim_time', default_value='true'),
         set_gazebo_model_path,
 
         gzserver,
-        gzclient,  # GUI不要なら消す/コメントアウト
+        gzclient,
 
         rsp,
         TimerAction(period=2.0, actions=[spawn]),
         TimerAction(period=6.0, actions=[jsb_spawner, diff_spawner]),
+        
         rviz,
     ])

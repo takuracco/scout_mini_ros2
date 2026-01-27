@@ -14,7 +14,7 @@
             <name>testworld</name>
             <uri>model://testworld</uri>
             <static>true</static>
-            <pose>-1 -1 0 0 0 0</pose>
+            <pose>-1 -1 0.01 0 0 0</pose>
         </include>
     </world>
 </sdf>

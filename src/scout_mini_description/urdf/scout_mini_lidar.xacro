@@ -25,17 +25,18 @@
       <sensor type="ray" name="laser_sensor">
         <pose>0 0 0 0 0 0</pose>
         <visualize>false</visualize>
-        <update_rate>5.0</update_rate>
+        <update_rate>15.0</update_rate>
         <ray>
           <scan>
             <horizontal>
-              <samples>120</samples>
+              <samples>1000</samples>
               <resolution>1</resolution>
               <min_angle>-3.14</min_angle>
               <max_angle>3.14</max_angle>
             </horizontal>
             <vertical>
               <samples>32</samples>
+              <!-- <samples>1</samples> -->
               <resolution>1</resolution>
               <min_angle>-0.57</min_angle>
               <max_angle>0.57</max_angle>
@@ -49,7 +50,7 @@
           <noise>
             <type>gaussian</type>
             <mean>0.0</mean>
-            <stddev>0.01</stddev>
+            <stddev>0.0</stddev>
           </noise>
         </ray>
 

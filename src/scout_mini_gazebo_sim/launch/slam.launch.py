@@ -6,7 +6,7 @@ from launch.substitutions import PathJoinSubstitution
 def generate_launch_description():
     config_dir = FindPackageShare("scout_mini_gazebo_sim")
     configuration_directory = PathJoinSubstitution([config_dir, "config"])
-    configuration_basename = "scout_3d.lua"  # ここは実ファイル名に合わせる
+    configuration_basename = "scout_3d.lua"  
 
     carto = Node(
         package="cartographer_ros",

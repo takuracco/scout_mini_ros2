@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!--
+    Gazebo Classic用のRealSense風RGB-Dカメラ。
+    外形・画角・解像度をD435相当に近づけた簡易モデル。
+  -->
+  <xacro:macro name="scout_mini_camera" params="parent:=base_link">
+
+    <!-- カメラ本体。base_linkの+x方向が車体前方 -->
+    <link name="camera_link">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="0.072"/>
+        <inertia ixx="0.00008" ixy="0" ixz="0"
+                 iyy="0.00012" iyz="0" izz="0.00016"/>
+      </inertial>
+
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <!-- RealSense D435のおおよその外形 -->
+          <box size="0.025 0.090 0.025"/>
+        </geometry>
+        <material name="camera_dark_gray">
+          <color rgba="0.12 0.12 0.12 1.0"/>
+        </material>
+      </visual>
+
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.025 0.090 0.025"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- 車体前方・LiDARより少し低い位置に固定 -->
+    <joint name="camera_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="camera_link"/>
+      <origin xyz="0.09 0 -0.06" rpy="0 0 0"/>
+    </joint>
+
+    <!-- REP-103準拠の光学座標系 x右, y下, z前 -->
+    <link name="camera_color_optical_frame"/>
+    <joint name="camera_color_optical_joint" type="fixed">
+      <parent link="camera_link"/>
+      <child link="camera_color_optical_frame"/>
+      <origin xyz="0 0 0" rpy="-1.57079632679 0 -1.57079632679"/>
+    </joint>
+
+    <link name="camera_depth_optical_frame"/>
+    <joint name="camera_depth_optical_joint" type="fixed">
+      <parent link="camera_color_optical_frame"/>
+      <child link="camera_depth_optical_frame"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <gazebo reference="camera_link">
+      <material>Gazebo/DarkGrey</material>
+
+      <sensor name="realsense_depth_camera" type="depth">
+        <always_on>true</always_on>
+        <visualize>true</visualize>
+        <update_rate>30.0</update_rate>
+
+        <camera>
+          <!-- 約87度。640x480で負荷を抑える -->
+          <horizontal_fov>1.5184</horizontal_fov>
+          <image>
+            <width>640</width>
+            <height>480</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.10</near>
+            <far>10.0</far>
+          </clip>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.001</stddev>
+          </noise>
+        </camera>
+
+        <plugin name="realsense_gazebo_plugin" filename="libgazebo_ros_camera.so">
+          <ros>
+            <namespace>/camera</namespace>
+            <remapping>image_raw:=color/image_raw</remapping>
+            <remapping>camera_info:=color/camera_info</remapping>
+            <remapping>depth/image_raw:=depth/image_raw</remapping>
+            <remapping>depth/camera_info:=depth/camera_info</remapping>
+            <remapping>points:=depth/points</remapping>
+          </ros>
+
+          <camera_name>camera</camera_name>
+          <frame_name>camera_color_optical_frame</frame_name>
+          <min_depth>0.10</min_depth>
+          <max_depth>10.0</max_depth>
+        </plugin>
+      </sensor>
+    </gazebo>
+
+  </xacro:macro>
+</robot>

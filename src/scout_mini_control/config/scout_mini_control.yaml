@@ -23,5 +23,4 @@ diff_drive_controller:
 
     use_stamped_vel: false
 
-    # ★これを追加
     enable_odom_tf: true

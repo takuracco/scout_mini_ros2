@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!--
+    Velodyne Simulator側に含まれる
+    HDL-32Eマクロを読み込む
+  -->
+  <xacro:include
+    filename="$(find velodyne_description)/urdf/HDL-32E.urdf.xacro"/>
+
+  <!--
+    Scout MiniへHDL-32Eを取り付けるマクロ
+
+    parent:
+      取り付け先リンク
+
+    lidar_name:
+      LiDARのリンク名・センサ名の接頭辞
+
+    topic:
+      出力するPointCloud2トピック
+
+    xyz / rpy:
+      parentからLiDAR基準位置までの変換
+  -->
+  <xacro:macro
+    name="scout_mini_velodyne_lidar"
+    params="
+      parent:=base_link
+      lidar_name:=velodyne
+      topic:=/velodyne_points
+      xyz:='0 0 0.3'
+      rpy:='0 0 0'
+      hz:=10
+      samples:=1000
+      min_range:=0.3
+      max_range:=100.0
+      noise:=0.0
+      gpu:=false">
+
+    <xacro:HDL-32E
+      parent="${parent}"
+      name="${lidar_name}"
+      topic="${topic}"
+      hz="${hz}"
+      lasers="32"
+      samples="${samples}"
+      collision_range="${min_range}"
+      min_range="${min_range}"
+      max_range="${max_range}"
+      noise="${noise}"
+      gpu="${gpu}">
+
+      <origin
+        xyz="${xyz}"
+        rpy="${rpy}"/>
+
+    </xacro:HDL-32E>
+
+  </xacro:macro>
+
+</robot>

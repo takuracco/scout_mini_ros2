@@ -5,10 +5,26 @@
   <xacro:include filename="$(find scout_mini_description)/urdf/scout_mini_lidar.xacro"/>
   <xacro:include filename="$(find scout_mini_description)/urdf/scout_mini_gazebo.xacro"/>
   <xacro:include filename="$(find scout_mini_description)/urdf/scout_mini_imu.xacro"/>
+  <xacro:include filename="$(find scout_mini_description)/urdf/scout_mini_camera.xacro"/>
+  <xacro:include filename="$(find scout_mini_description)/urdf/scout_mini_velodyne_lidar.xacro"/>
+
 
   <xacro:scout_mini_base/>
-  <xacro:scout_mini_lidar parent="base_link"/>
+  <!-- <xacro:scout_mini_lidar parent="base_link"/> -->
+  <xacro:scout_mini_velodyne_lidar
+    parent="base_link"
+    lidar_name="velodyne"
+    topic="/velodyne_points"
+    xyz="0 0 0.3"
+    rpy="0 0 0"
+    hz="10"
+    samples="500"
+    min_range="0.3"
+    max_range="50.0"
+    noise="0.0"
+    gpu="false"/>
   <xacro:scout_mini_imu parent="base_link"/>
+  <!-- <xacro:scout_mini_camera parent="laser_link"/> -->
   <xacro:scout_mini_gazebo/>
 
 
@@ -17,6 +33,9 @@
   <gazebo>
     <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
       <parameters>$(arg ros2_control_yaml)</parameters>
+       <ros>
+        <remapping>/diff_drive_controller/cmd_vel_unstamped:=/cmd_vel</remapping>
+      </ros>
     </plugin>
   </gazebo>
 

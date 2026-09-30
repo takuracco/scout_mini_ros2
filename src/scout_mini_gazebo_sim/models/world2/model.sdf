@@ -1,0 +1,172 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <model name="world2">
+    <static>true</static>
+
+    <!-- outer wall -->
+    <link name="wall_link">
+      <visual name="wall_visual">
+        <geometry>
+          <mesh>
+            <uri>model://world2/meshes/wall.stl</uri>
+            <scale>0.001 0.001 0.001</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.45 0.45 0.45 1</ambient>
+          <diffuse>0.45 0.45 0.45 1</diffuse>
+        </material>
+      </visual>
+      <collision name="wall_collision">
+        <geometry>
+          <mesh>
+            <uri>model://world2/meshes/wall.stl</uri>
+            <scale>0.001 0.001 0.001</scale>
+          </mesh>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- 10% slope -->
+    <link name="slope_10_link">
+      <pose>1.0 3.0 0 0 0 0</pose>
+      <visual name="visual">
+        <geometry><mesh><uri>model://world2/meshes/slope_10par.stl</uri><scale>0.001 0.001 0.001</scale></mesh></geometry>
+        <material><ambient>0.6 1.0 0.6 1</ambient><diffuse>0.6 1.0 0.6 1</diffuse></material>
+      </visual>
+      <collision name="collision">
+        <geometry><mesh><uri>model://world2/meshes/slope_10par.stl</uri><scale>0.001 0.001 0.001</scale></mesh></geometry>
+      </collision>
+    </link>
+
+    <link name="slope_10_link2">
+      <pose>1.0 4.0 0.1 0 0 0</pose>
+      <visual name="visual">
+        <geometry><mesh><uri>model://world2/meshes/slope_10par.stl</uri><scale>0.001 0.001 0.001</scale></mesh></geometry>
+        <material><ambient>0.6 1.0 0.6 1</ambient><diffuse>0.6 1.0 0.6 1</diffuse></material>
+      </visual>
+      <collision name="collision">
+        <geometry><mesh><uri>model://world2/meshes/slope_10par.stl</uri><scale>0.001 0.001 0.001</scale></mesh></geometry>
+      </collision>
+    </link>
+
+    <!-- platform after 10% slope: height 0.10m -->
+    <link name="platform_10_link">
+      <pose>1.5 4.5 0.05 0 0 0</pose>
+      <visual name="visual">
+        <geometry><box><size>1.0 1.0 0.10</size></box></geometry>
+        <material><ambient>0.6 1.0 0.6 1</ambient><diffuse>0.6 1.0 0.6 1</diffuse></material>
+      </visual>
+      <collision name="collision">
+        <geometry><box><size>1.0 1.0 0.10</size></box></geometry>
+      </collision>
+    </link>
+
+    <!-- 20% slope -->
+    <link name="slope_20_link">
+      <pose>2.0 4.0 0 0 0 0</pose>
+      <visual name="visual">
+        <geometry><mesh><uri>model://world2/meshes/slope_20par.stl</uri><scale>0.001 0.001 0.001</scale></mesh></geometry>
+        <material><ambient>0.3 0.9 0.3 1</ambient><diffuse>0.3 0.9 0.3 1</diffuse></material>
+      </visual>
+      <collision name="collision">
+        <geometry><mesh><uri>model://world2/meshes/slope_20par.stl</uri><scale>0.001 0.001 0.001</scale></mesh></geometry>
+      </collision>
+    </link>
+
+    <!-- platform after 20% slope: height 0.20m -->
+    <!-- <link name="platform_20_link">
+      <pose>3.0 4.0 0.10 0 0 0</pose>
+      <visual name="visual">
+        <geometry><box><size>1.0 1.0 0.20</size></box></geometry>
+        <material><ambient>0.3 0.9 0.3 1</ambient><diffuse>0.3 0.9 0.3 1</diffuse></material>
+      </visual>
+      <collision name="collision">
+        <geometry><box><size>1.0 1.0 0.20</size></box></geometry>
+      </collision>
+    </link> -->
+
+    <!-- 50% slope -->
+    <link name="slope_50_link">
+      <pose>6.0 6.0 0.2 0 0 3.141593</pose>
+      <visual name="visual">
+        <geometry><mesh><uri>model://world2/meshes/slope_50par.stl</uri><scale>0.001 0.001 0.001</scale></mesh></geometry>
+        <material><ambient>0.0 0.45 0.0 1</ambient><diffuse>0.0 0.45 0.0 1</diffuse></material>
+      </visual>
+      <collision name="collision">
+        <geometry><mesh><uri>model://world2/meshes/slope_50par.stl</uri><scale>0.001 0.001 0.001</scale></mesh></geometry>
+      </collision>
+    </link>
+
+    <!-- platform after 50% slope: height 0.50m -->
+    <link name="platform_50_link">
+      <pose>5.5 3.5 0.45 0 0 0</pose>
+      <visual name="visual">
+        <geometry><box><size>1.0 3.0 0.50</size></box></geometry>
+        <material><ambient>0.0 0.45 0.0 1</ambient><diffuse>0.0 0.45 0.0 1</diffuse></material>
+      </visual>
+      <collision name="collision">
+        <geometry><box><size>1.0 3.0 0.50</size></box></geometry>
+      </collision>
+    </link>
+
+    <!-- 30% slope -->
+    <link name="slope_30_link">
+      <pose>7.0 6.0 0.2 0 0 3.141593</pose>
+      <visual name="visual">
+        <geometry><mesh><uri>model://world2/meshes/slope_30par.stl</uri><scale>0.001 0.001 0.001</scale></mesh></geometry>
+        <material><ambient>0.0 0.65 0.0 1</ambient><diffuse>0.0 0.65 0.0 1</diffuse></material>
+      </visual>
+      <collision name="collision">
+        <geometry><mesh><uri>model://world2/meshes/slope_30par.stl</uri><scale>0.001 0.001 0.001</scale></mesh></geometry>
+      </collision>
+    </link>
+
+    <!-- platform after 30% slope: height 0.30m -->
+    <link name="platform_30_link">
+      <pose>7.0 3.5 0.35 0 0 0</pose>
+      <visual name="visual">
+        <geometry><box><size>2.0 3.0 0.30</size></box></geometry>
+        <material><ambient>0.0 0.65 0.0 1</ambient><diffuse>0.0 0.65 0.0 1</diffuse></material>
+      </visual>
+      <collision name="collision">
+        <geometry><box><size>2.0 3.0 0.30</size></box></geometry>
+      </collision>
+    </link>
+
+    <!-- simple internal walls / guide walls -->
+    <link name="center_wall">
+      <pose>4.0 3.5 0.75 0 0 0</pose>
+      <visual name="visual">
+        <geometry><box><size>2.0 7.0 1.5</size></box></geometry>
+        <material><ambient>0.45 0.45 0.45 1</ambient><diffuse>0.45 0.45 0.45 1</diffuse></material>
+      </visual>
+      <collision name="collision">
+        <geometry><box><size>2.0 7.0 1.5</size></box></geometry>
+      </collision>
+    </link>
+
+    <link name="left_block_wall">
+      <pose>1.5 7.5 0.1 0 0 0</pose>
+      <visual name="visual">
+        <geometry><box><size>3.0 5.0 0.2</size></box></geometry>
+        <material><ambient>0.45 0.45 0.45 1</ambient><diffuse>0.45 0.45 0.45 1</diffuse></material>
+      </visual>
+      <collision name="collision">
+        <geometry><box><size>3.0 5.0 0.2</size></box></geometry>
+      </collision>
+    </link>
+
+    <link name="right_block_wall">
+      <pose>6.5 5.0 0.1 0 0 0</pose>
+      <visual name="visual">
+        <geometry><box><size>7.0 10.0 0.2</size></box></geometry>
+        <material><ambient>0.45 0.45 0.45 1</ambient><diffuse>0.45 0.45 0.45 1</diffuse></material>
+      </visual>
+      <collision name="collision">
+        <geometry><box><size>7.0 10.0 0.2</size></box></geometry>
+      </collision>
+    </link>
+
+  </model>
+</sdf>

@@ -10,9 +10,13 @@ def generate_launch_description():
     sim_share  = FindPackageShare('scout_mini_gazebo_sim')
     desc_share = FindPackageShare('scout_mini_description')
 
-    world_file = PathJoinSubstitution([sim_share, 'worlds', 'testworld.world'])
+    # world_file = PathJoinSubstitution([sim_share, 'worlds', 'multi_slope.world'])
+    # world_file = PathJoinSubstitution([sim_share, 'worlds', 'world2.world'])
+    world_file = PathJoinSubstitution([sim_share, 'worlds', 'summer_world.world'])
+    # world_file = PathJoinSubstitution([sim_share, 'worlds', 'world_two.world'])
+    # world_file = PathJoinSubstitution([sim_share, 'worlds', 'testworld.world'])
 
-    slam_yaml = PathJoinSubstitution([sim_share, 'config', 'scout_mini_slam.yaml'])
+    # slam_yaml = PathJoinSubstitution([sim_share, 'config', 'scout_mini_slam.yaml'])
 
     control_yaml = PathJoinSubstitution([
         FindPackageShare('scout_mini_control'),
@@ -37,7 +41,6 @@ def generate_launch_description():
         ]
     )
 
-    # ★ここがポイント：gzserver/gzclientはExecuteProcessで起動する
     gzserver = ExecuteProcess(
         cmd=[
             'gzserver',
@@ -49,7 +52,6 @@ def generate_launch_description():
         output='screen',
     )
 
-    # GUIが落ちるなら一旦コメントアウトでOK
     gzclient = ExecuteProcess(
         cmd=['gzclient'],
         output='screen',
@@ -68,7 +70,7 @@ def generate_launch_description():
     spawn = Node(
         package='gazebo_ros',
         executable='spawn_entity.py',
-        arguments=['-entity', 'scout_mini', '-topic', '/robot_description', '-x', '0.5', '-y', '0.5', '-z', '0.2'],
+        arguments=['-entity', 'scout_mini', '-topic', '/robot_description', '-x', '0.5', '-y', '0.5', '-z', '0.3'],
         output='screen',
     )
 
@@ -84,6 +86,22 @@ def generate_launch_description():
         arguments=['diff_drive_controller', '--controller-manager', '/controller_manager'],
         output='screen',
     )
+
+    lidar_stamp_fix = Node(
+        package='scout_mini_utils',
+        executable='lidar_stamp_fix',
+        name='lidar_stamp_fix',
+        parameters=[{'use_sim_time': use_sim_time}],
+        output='screen',
+    )
+
+    # gt_odom_tf = Node(
+    #     package='scout_mini_utils',
+    #     executable='gt_odom_tf',
+    #     name='gt_odom_tf',
+    #     parameters=[{'use_sim_time': use_sim_time}],
+    #     output='screen',
+    # )
 
     rviz_config = PathJoinSubstitution([desc_share, 'rviz', 'scout_mini.rviz'])
     rviz = Node(
@@ -103,6 +121,10 @@ def generate_launch_description():
         gzclient,
 
         rsp,
+
+        lidar_stamp_fix,
+        # gt_odom_tf,
+
         TimerAction(period=2.0, actions=[spawn]),
         TimerAction(period=6.0, actions=[jsb_spawner, diff_spawner]),
         

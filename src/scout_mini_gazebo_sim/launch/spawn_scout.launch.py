@@ -21,9 +21,15 @@ def generate_launch_description():
     ])
 
     # Robot Description
+    control_yaml = PathJoinSubstitution([
+        FindPackageShare('scout_mini_control'),
+        'config',
+        'scout_mini_control.yaml',
+    ])
+
     robot_description = Command([
-        'xacro ',
-        xacro_file
+        'xacro ', xacro_file,
+        ' ros2_control_yaml:=', control_yaml
     ])
 
     # Robot State Publisher

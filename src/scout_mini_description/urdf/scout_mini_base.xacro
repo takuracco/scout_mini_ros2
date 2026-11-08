@@ -76,7 +76,7 @@
       <collision>
         <origin rpy="0 0 0" xyz="0 0 0"/>
         <geometry>
-          <mesh filename="package://scout_mini_description/meshes/wheel.dae"/>
+          <cylinder radius="0.08" length="0.05"/>
         </geometry>
       </collision>
     </link>
@@ -103,7 +103,7 @@
       <collision>
         <origin rpy="0 0 0" xyz="0 0 0"/>
         <geometry>
-          <mesh filename="package://scout_mini_description/meshes/wheel.dae"/>
+          <cylinder radius="0.08" length="0.05"/>
         </geometry>
       </collision>
     </link>
@@ -130,7 +130,7 @@
       <collision>
         <origin rpy="0 0 0" xyz="0 0 0"/>
         <geometry>
-          <mesh filename="package://scout_mini_description/meshes/wheel.dae"/>
+          <cylinder radius="0.08" length="0.05"/>
         </geometry>
       </collision>
     </link>
@@ -157,7 +157,7 @@
       <collision>
         <origin rpy="0 0 0" xyz="0 0 0"/>
         <geometry>
-          <mesh filename="package://scout_mini_description/meshes/wheel.dae"/>
+          <cylinder radius="0.08" length="0.05"/>
         </geometry>
       </collision>
     </link>

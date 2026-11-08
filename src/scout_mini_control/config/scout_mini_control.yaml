@@ -23,4 +23,4 @@ diff_drive_controller:
 
     use_stamped_vel: false
 
-    enable_odom_tf: true
+    enable_odom_tf: false

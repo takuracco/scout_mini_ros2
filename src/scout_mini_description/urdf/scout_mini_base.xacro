@@ -85,7 +85,7 @@
       <parent link="base_link"/>
       <child link="front_left_wheel_link"/>
       <origin rpy="-1.57 0 0" xyz="0.2319755 0.2082515 -0.100998"/>
-      <axis rpy="0 0 0" xyz="0 0 -1"/>
+      <axis rpy="0 0 0" xyz="0 0 1"/>
     </joint>
 
     <link name="rear_left_wheel_link">
@@ -112,7 +112,7 @@
       <parent link="base_link"/>
       <child link="rear_left_wheel_link"/>
       <origin rpy="-1.57 0 0" xyz="-0.2319755 0.2082515 -0.100998"/>
-      <axis rpy="0 0 0" xyz="0 0 -1"/>
+      <axis rpy="0 0 0" xyz="0 0 1"/>
     </joint>
 
     <link name="front_right_wheel_link">
@@ -139,7 +139,7 @@
       <parent link="base_link"/>
       <child link="front_right_wheel_link"/>
       <origin rpy="1.57 0 0" xyz="0.2319755 -0.2082515 -0.099998"/>
-      <axis rpy="0 0 0" xyz="0 0 1"/>
+      <axis rpy="0 0 0" xyz="0 0 -1"/>
     </joint>
 
     <link name="rear_right_wheel_link">
@@ -166,7 +166,7 @@
       <parent link="base_link"/>
       <child link="rear_right_wheel_link"/>
       <origin rpy="1.57 0 0" xyz="-0.2319755 -0.2082515 -0.099998"/>
-      <axis rpy="0 0 0" xyz="0 0 1"/>
+      <axis rpy="0 0 0" xyz="0 0 -1"/>
     </joint>
 
   </xacro:macro>

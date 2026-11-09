@@ -15,7 +15,7 @@ diff_drive_controller:
     right_wheel_names: ["front_right_wheel", "rear_right_wheel"]
 
     wheel_separation: 0.42
-    wheel_radius: 0.075
+    wheel_radius: 0.08
 
     publish_rate: 100.0
     base_frame_id: base_link

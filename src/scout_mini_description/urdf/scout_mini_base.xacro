@@ -46,12 +46,6 @@
       <origin xyz="0 0 0" rpy="0 0 0"/>
     </joint>
 
-    <joint name="inertial_joint" type="fixed">
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <parent link="base_link"/>
-      <child link="inertial_link"/>
-    </joint>
-
     <!-- Wheels -->
     <link name="front_left_wheel_link">
       <inertial>
